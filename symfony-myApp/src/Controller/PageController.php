@@ -15,4 +15,9 @@ class PageController extends AbstractController
             'controller_name' => 'PageController',
         ]);
     }
+
+    #[Route('/', name:'inicio')]
+    public function inicio(){
+        return $this->render('inicio.html.twig');
+    }
 }
