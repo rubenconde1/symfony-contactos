@@ -1,5 +1,8 @@
 <ul>
-    <li><strong>{{producto.nombre}}</strong></li>
-    <li><strong>Marca: </strong>{{producto.marca}}</li>
-    <li><strong>Precio: </strong>{{producto.precio}}</li>
+    <li><strong>{{contacto.nombre}}</strong></li>
+    <li><strong>Teléfono</strong>:{{contacto.telefono}}</li>
+    {% if contacto.provincia %}
+    <li><strong>Provincia: </strong>{{contacto.provincia.nombre}}</li>
+    {% endif %}
+    <li><strong>E-mail</strong>:{{contacto.email}}</li>
 </ul>

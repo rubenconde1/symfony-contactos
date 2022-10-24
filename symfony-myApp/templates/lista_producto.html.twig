@@ -4,7 +4,7 @@
     <h1>Listado de productos</h1>
     {% if productos %}
         {% for producto in productos %}
-            {{include ('partials/datos_producto.html.twig', {'producto':producto})}}
+            {{include('partials/datos_producto.html.twig', {'producto':producto})}}
         {% endfor %}
     {% else %}
         <p>No se han encontrado productos</p>

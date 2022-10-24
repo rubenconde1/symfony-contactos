@@ -8,14 +8,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductoController extends AbstractController
 {
-// Array de productos (Eliminar con la BDD creada)
+    // Array de productos (Eliminar con la BDD creada)
     private $productos = [
         1 => ['nombre' => 'Maqueta 1', 'marca' => 'Tamiya', 'precio' => '19,90€'],
         2 => ['nombre' => 'Maqueta 2', 'marca' => 'Revell', 'precio' => '15,70€'],
         3 => ['nombre' => 'Maqueta 3', 'marca' => 'Revell', 'precio' => '87,30€']
     ];
 
-    #[Route('/producto/{codigo<\d+>?1}', name:'ficha_producto')]
+    #[Route('producto/{codigo<\d+>?1}', name:'ficha_producto')]
     public function ficha($codigo): Response{
         $resultado = ($this->productos[$codigo] ?? null);
 
@@ -26,12 +26,11 @@ class ProductoController extends AbstractController
 
     #[Route('/producto/buscar/{texto}', name:'buscar_producto')]
     public function buscar($texto): Response{
-        $resultados = array_filter($this->productos,
-        function ($producto) use ($texto) {
-            return strpos($producto['nombre'], $texto) !== FALSE;
+        $resultados = array_filter($this->productos, function ($producto) use ($texto){
+             return strpos($producto['nombre'], $texto) !== FALSE;
         });
 
-        return $this->render('lista_productos.html.twig', [
+        return $this->render('lista_producto.html.twig', [
             'productos' => $resultados
         ]);
     }

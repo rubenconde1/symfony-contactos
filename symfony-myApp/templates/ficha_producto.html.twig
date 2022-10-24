@@ -3,8 +3,8 @@
 {% block body %}
     <h1>Ficha del producto</h1>
     {% if producto %}
-        {{include ('partials/datos_producto.html.twig', {'producto':producto})}}
+        {{include('partials/datos_producto.html.twig', {'producto':producto})}}
     {% else %}
-        <p>Contacto no encontrado</p>
+        <p>Producto no encontrado</p>
     {% endif %}
 {% endblock %}
