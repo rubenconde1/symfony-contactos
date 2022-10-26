@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Producto;
+use App\Entity\Proveedor;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,5 +97,38 @@ class ProductoController extends AbstractController
                 'producto' => null
             ]);
         }
+    }
+
+    #[Route('/producto/insertarConProveedor', name:'insertar_con_proveedor_producto')]
+    public function insertarConProveedor(ManagerRegistry $doctrine): Response{
+        $entityManager = $doctrine->getManager();
+
+        $proveedor = new Proveedor();
+
+        $proveedor->setNombre('Revell');
+        $proveedor->setEmail('revell@revell.com');
+        
+        $producto = new Producto();
+
+        $producto->setNombre('Prueba inserción con proveedor');
+        $producto->setMarca('Bandai');
+        $producto->setPrecio(34.65);
+        $producto->setProveedor($proveedor);
+
+        $entityManager->persist($proveedor);
+        $entityManager->persist($producto);
+
+        $entityManager->flush();
+        return $this->render('ficha_producto.html.twig', [
+            'producto' => $producto
+        ]);
+    }
+
+    #[Route('/producto/insertarSinProveedor', name:'insertar_sin_proveedor_producto')]
+    public function insertarSinProveedor(ManagerRegistry $doctrine): Response{
+        $entityManager = $doctrine->getManager();
+        $repositorio = $doctrine->getRepository(Proveedor::class);
+
+        $proveedor = $repositorio->findOneBy(['nombre' => 'Revell']);
     }
 }

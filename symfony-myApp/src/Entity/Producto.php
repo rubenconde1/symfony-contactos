@@ -23,6 +23,9 @@ class Producto
     #[ORM\Column(nullable: true)]
     private ?float $precio = null;
 
+    #[ORM\ManyToOne]
+    private ?Proveedor $proveedor = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Producto
     public function setPrecio(?float $precio): self
     {
         $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getProveedor(): ?Proveedor
+    {
+        return $this->proveedor;
+    }
+
+    public function setProveedor(?Proveedor $proveedor): self
+    {
+        $this->proveedor = $proveedor;
 
         return $this;
     }
