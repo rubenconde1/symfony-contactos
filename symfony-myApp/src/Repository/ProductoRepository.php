@@ -21,6 +21,14 @@ class ProductoRepository extends ServiceEntityRepository
         parent::__construct($registry, Producto::class);
     }
 
+    public function findByName($text): array {
+        $qb = $this->createQueryBuilder('c')
+        ->andWhere('c.nombre LIKE :text')
+        ->setParameter('text', '%' . $text . '%')
+        ->getQuery();
+        return $qb->execute();
+    }
+
     public function save(Producto $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
