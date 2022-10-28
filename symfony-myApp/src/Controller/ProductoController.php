@@ -6,6 +6,11 @@ use App\Entity\Producto;
 use App\Entity\Proveedor;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,6 +23,60 @@ class ProductoController extends AbstractController
         3 => ['nombre' => 'Maqueta 3', 'marca' => 'Revell', 'precio' => 87.30]
     ];
 
+    #[Route('/producto/nuevo', name:'nuevo_producto')]
+    public function nuevo(ManagerRegistry $doctrine, Request $request){
+        $producto = new Producto();
+
+        $formulario = $this->createFormBuilder($producto)
+            ->add('nombre', TextType::class)
+            ->add('marca', TextType::class)
+            ->add('precio', NumberType::class, array('scale' => 2))
+            ->add('proveedor', EntityType::class, array(
+                'class' => Proveedor::class,
+                'choice_label' => 'nombre',))
+            ->add('save', SubmitType::class, array('label' => 'Enviar'))
+            ->getForm();
+            $formulario->handleRequest($request);
+
+            if ($formulario->isSubmitted() && $formulario->isValid()) {
+                $producto = $formulario->getData();
+                $entityManager = $doctrine->getManager();
+                $entityManager->persist($producto);
+                $entityManager->flush();
+                return $this->redirectToRoute('ficha_producto', ['codigo' => $producto->getId()]);
+            }
+        return $this->render('nuevo.html.twig', array(
+            'formulario' => $formulario->createView()
+        ));
+    }
+
+    #[Route('/producto/editar/{codigo}', name:'editar_producto', requirements:['codigo'=>'\d+'])]
+    public function editar(ManagerRegistry $doctrine, Request $request, $codigo){
+        $repositorio = $doctrine->getRepository(Producto::class);
+        $producto = $repositorio->find($codigo);
+
+        $formulario = $this->createFormBuilder($producto)
+            ->add('nombre', TextType::class)
+            ->add('marca', TextType::class)
+            ->add('precio', NumberType::class, array('scale' => 2))
+            ->add('proveedor', EntityType::class, array(
+                'class' => Proveedor::class,
+                'choice_label' => 'nombre',))
+            ->add('save', SubmitType::class, array('label' => 'Enviar'))
+            ->getForm();
+
+        $formulario->handleRequest($request);
+
+        if ($formulario->isSubmitted() && $formulario->isValid()) {
+            $producto = $formulario->getData();
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($producto);
+            $entityManager->flush();
+        }
+        return $this->render('editar.html.twig', array(
+            'formulario' => $formulario->createView()
+        ));
+    }
     #[Route('/producto/insertar', name:'insertar_producto')]
     public function insertar(ManagerRegistry $doctrine) {
         $entityManager = $doctrine->getManager();
