@@ -130,5 +130,19 @@ class ProductoController extends AbstractController
         $repositorio = $doctrine->getRepository(Proveedor::class);
 
         $proveedor = $repositorio->findOneBy(['nombre' => 'Revell']);
+
+        $producto = new Producto();
+
+        $producto->setNombre('Inserción de prueba sin producto');
+        $producto->setMarca('Tamiya');
+        $producto->setPrecio(15.49);
+        $producto->setProveedor($proveedor);
+
+        $entityManager->persist($producto);
+
+        $entityManager->flush();
+        return $this->render('ficha_producto.html.twig', [
+            'producto' => $producto
+        ]);
     }
 }
