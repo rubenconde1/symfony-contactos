@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Producto;
 use App\Entity\Proveedor;
+use App\Form\ProductoType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,15 +28,8 @@ class ProductoController extends AbstractController
     public function nuevo(ManagerRegistry $doctrine, Request $request){
         $producto = new Producto();
 
-        $formulario = $this->createFormBuilder($producto)
-            ->add('nombre', TextType::class)
-            ->add('marca', TextType::class)
-            ->add('precio', NumberType::class, array('scale' => 2))
-            ->add('proveedor', EntityType::class, array(
-                'class' => Proveedor::class,
-                'choice_label' => 'nombre',))
-            ->add('save', SubmitType::class, array('label' => 'Enviar'))
-            ->getForm();
+            $formulario = $this->createForm(Producto::class, $producto);
+
             $formulario->handleRequest($request);
 
             if ($formulario->isSubmitted() && $formulario->isValid()) {
@@ -55,15 +49,7 @@ class ProductoController extends AbstractController
         $repositorio = $doctrine->getRepository(Producto::class);
         $producto = $repositorio->find($codigo);
 
-        $formulario = $this->createFormBuilder($producto)
-            ->add('nombre', TextType::class)
-            ->add('marca', TextType::class)
-            ->add('precio', NumberType::class, array('scale' => 2))
-            ->add('proveedor', EntityType::class, array(
-                'class' => Proveedor::class,
-                'choice_label' => 'nombre',))
-            ->add('save', SubmitType::class, array('label' => 'Enviar'))
-            ->getForm();
+        $formulario = $this->createForm(ProductoType::class, $producto);
 
         $formulario->handleRequest($request);
 

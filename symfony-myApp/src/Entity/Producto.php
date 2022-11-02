@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductoRepository::class)]
 class Producto
@@ -15,9 +16,11 @@ class Producto
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:'El nombre es obligatorio')]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:'La marca es obligatorio')]
     private ?string $marca = null;
 
     #[ORM\Column(nullable: true)]
@@ -36,7 +39,7 @@ class Producto
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(?string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -48,7 +51,7 @@ class Producto
         return $this->marca;
     }
 
-    public function setMarca(string $marca): self
+    public function setMarca(?string $marca): self
     {
         $this->marca = $marca;
 
