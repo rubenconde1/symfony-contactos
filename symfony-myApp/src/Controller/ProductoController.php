@@ -28,7 +28,7 @@ class ProductoController extends AbstractController
     public function nuevo(ManagerRegistry $doctrine, Request $request){
         $producto = new Producto();
 
-            $formulario = $this->createForm(Producto::class, $producto);
+            $formulario = $this->createForm(ProductoType::class, $producto);
 
             $formulario->handleRequest($request);
 
